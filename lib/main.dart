@@ -2,7 +2,6 @@ import 'package:camera/camera.dart';
 import 'package:english_words/english_words.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:namer_app/data/repository/model/Weather.dart';
 import 'package:namer_app/ui/camera/Camera.dart';
 import 'package:namer_app/ui/favorites/FavoritesPageViewModel.dart';
 import 'package:namer_app/ui/generator/GeneratorPageViewModel.dart';
