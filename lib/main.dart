@@ -1,11 +1,13 @@
+import 'dart:math';
+
 import 'package:camera/camera.dart';
-import 'package:english_words/english_words.dart';
 import 'package:flutter/material.dart';
 import 'package:namer_app/ui/camera/Camera.dart';
+import 'package:namer_app/ui/currency/CurrencyPage.dart';
+import 'package:namer_app/ui/currency/CurrencyViewModel.dart';
 import 'package:namer_app/ui/favorites/FavoritesPageViewModel.dart';
 import 'package:namer_app/ui/generator/GeneratorPageViewModel.dart';
 import 'package:namer_app/ui/weather/WeatherViewModel.dart';
-import 'package:namer_app/ui/weather/WeatherPage.dart';
 import 'package:provider/provider.dart';
 
 import 'ui/favorites/FavoritesPage.dart';
@@ -34,13 +36,14 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => WeatherViewModel()),
         ChangeNotifierProvider(create: (_) => GeneratorPageViewModel()),
         ChangeNotifierProvider(create: (_) => FavoritePageViewModel()),
+        ChangeNotifierProvider(create: (_) => CurrencyViewModel()),
         ChangeNotifierProvider(create: (_) => MyAppState()),
       ],
       child: MaterialApp(
         title: 'Test App',
         theme: ThemeData(
           useMaterial3: true,
-          colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurpleAccent),
+          colorScheme: ColorScheme.fromSeed(seedColor: Colors.amber),
         ),
         home: MyHomePage(
           camera: camera,
@@ -64,15 +67,20 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
-
     Widget page;
     switch (selectedIndex) {
       case 0:
-        page = CameraWidget(camera: widget.camera,);
+        // Provider.of<WeatherViewModel>(context).fetchWeatherData();
+        // page = WeatherWidget();
+        // break;
+        Provider.of<CurrencyViewModel>(context).fetchCurrencyData();
+        page = CurrencyPage();
+        print("Currecy");
         break;
       case 1:
-        Provider.of<WeatherViewModel>(context).fetchWeatherData();
-        page = WeatherWidget();
+        page = CameraWidget(
+          camera: widget.camera,
+        );
         break;
       case 2:
         page = GeneratorPage();
@@ -87,42 +95,40 @@ class _MyHomePageState extends State<MyHomePage> {
 
     return LayoutBuilder(builder: (context, constraints) {
       return Scaffold(
+        bottomNavigationBar: BottomNavigationBar(
+          items: const <BottomNavigationBarItem>[
+            BottomNavigationBarItem(
+              icon: Icon(Icons.monetization_on),
+              label: "Currency",
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.camera),
+              label: "Camera",
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.home),
+              label: "Generator",
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.favorite),
+              label: "Favorites",
+            ),
+          ],
+          selectedItemColor: Colors.amber[800],
+          unselectedItemColor: Colors.black,
+          currentIndex: selectedIndex,
+          onTap: (value) {
+            setState(() {
+              selectedIndex = value;
+            });
+          },
+        ),
         body: Row(
           children: [
-            SafeArea(
-              child: NavigationRail(
-                extended: constraints.maxWidth >= 600,
-                destinations: [
-                  NavigationRailDestination(
-                      icon: Icon(Icons.camera),
-                      label: Text('Camera')
-                  ),
-                  NavigationRailDestination(
-                      icon: Icon(Icons.sunny),
-                      label: Text('Weather')
-                  ),
-                  NavigationRailDestination(
-                    icon: Icon(Icons.home),
-                    label: Text('Generator'),
-                  ),
-                  NavigationRailDestination(
-                    icon: Icon(Icons.favorite),
-                    label: Text('Favorites'),
-                  ),
-                ],
-                selectedIndex: selectedIndex,
-                onDestinationSelected: (value) {
-                  setState(() {
-                    selectedIndex = value;
-                  });
-                },
-              ),
-            ),
-            Expanded(
-              child: Container(
-                color: Theme.of(context).colorScheme.primaryContainer,
-                child: page,
-              ),
+            Container(
+              width: constraints.maxWidth,
+              color: Theme.of(context).colorScheme.primaryContainer,
+              child: page,
             ),
           ],
         ),
@@ -131,15 +137,29 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 }
 
+var carList = [
+  "BMW iX M60",
+  "BMW i7",
+  "BMW X7",
+  "BMW 3 series",
+  "BMW 2 series",
+  "BMW iX M60",
+  "BMW X6",
+  "BMW X1"
+];
+
 class MyAppState extends ChangeNotifier {
-  var current = WordPair.random();
+
+  var current = carList[Random().nextInt(carList.length)];
 
   void getNext() {
-    current = WordPair.random();
+    while (favorites.contains(current)) {
+      current = carList[Random().nextInt(carList.length)];
+    }
     notifyListeners();
   }
 
-  var favorites = <WordPair>[];
+  var favorites = <String>[];
 
   void toggleFavorite() {
     if (favorites.contains(current)) {

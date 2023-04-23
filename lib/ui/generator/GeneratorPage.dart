@@ -1,4 +1,3 @@
-import 'package:english_words/english_words.dart';
 import 'package:flutter/material.dart';
 import 'package:namer_app/ui/generator/GeneratorPageViewModel.dart';
 import 'package:provider/provider.dart';
@@ -7,7 +6,6 @@ import '../../data/local/model/Favorite.dart';
 import '../../main.dart';
 
 class GeneratorPage extends StatelessWidget {
-
   @override
   Widget build(BuildContext context) {
     var appState = context.watch<MyAppState>();
@@ -32,7 +30,7 @@ class GeneratorPage extends StatelessWidget {
             children: [
               ElevatedButton.icon(
                 onPressed: () {
-                  var word = "${pair.first.toLowerCase()}${pair.second.toLowerCase()}";
+                  var word = pair;
                   if (!appState.favorites.contains(pair)) {
                     generatorPageVm.addFavorite(Favorite.word(word));
                   } else {
@@ -64,7 +62,7 @@ class BigCard extends StatelessWidget {
     required this.pair,
   });
 
-  final WordPair pair;
+  final String pair;
 
   @override
   Widget build(BuildContext context) {
@@ -77,8 +75,7 @@ class BigCard extends StatelessWidget {
         color: theme.colorScheme.primary,
         child: Padding(
           padding: const EdgeInsets.all(8.0),
-          child: Text(pair.asLowerCase,
-              style: style, semanticsLabel: "${pair.first} ${pair.second}"),
+          child: Text(pair, style: style, semanticsLabel: pair),
         ));
   }
 }

@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:namer_app/ui/favorites/FavoritesPageViewModel.dart';
 import 'package:provider/provider.dart';
 
-import '../../main.dart';
-
 class Favorites extends StatelessWidget {
   @override
   Widget build(BuildContext context) {

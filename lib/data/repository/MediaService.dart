@@ -5,12 +5,11 @@ import 'package:http/http.dart' as http;
 import '../network/app_exception.dart';
 
 class MediaService {
-  final String _baseUrl = "https://api.openweathermap.org/data/2.5/weather?appid=84d5da044ccf9ca9af58e9fb8867ece8&";
 
   Future<dynamic> getResponse(String url) async {
     dynamic responseJson;
     try {
-      final response = await http.get(Uri.parse(_baseUrl + url));
+      final response = await http.get(Uri.parse(url));
       responseJson = returnResponse(response);
     } on SocketException {
       throw FetchDataException('No Internet Connection');

@@ -23,10 +23,12 @@ class WeatherRepository {
     'lat=57.9214912&lon=59.9816186',
   ];
 
+  final String _baseUrl = "https://api.openweathermap.org/data/2.5/weather?appid=84d5da044ccf9ca9af58e9fb8867ece8&";
+
   Future<List<Weather>> fetchCurrentWeatherList() async {
     List<Weather> result = [];
     for (var city in citiesCoords) {
-      dynamic response = await _mediaService.getResponse(city);
+      dynamic response = await _mediaService.getResponse(_baseUrl + city);
       result.add(Weather.fromJson(response));
     }
     return result;

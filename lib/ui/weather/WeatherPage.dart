@@ -20,9 +20,10 @@ class WeatherWidget extends StatelessWidget {
       );
     } else if (weathers.response.status == Status.LOADING) {
       return Center(
-          child: SpinKitWave(
+          child: SpinKitFoldingCube(
             color: Colors.white,
-            size: 50.0,)
+            size: 50.0,
+          )
       );
     }
 
